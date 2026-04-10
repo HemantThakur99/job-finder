@@ -1,0 +1,43 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f3f4f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bgGradient)" opacity="0.1"/>
+  
+  <!-- Main card representing job portal -->
+  <rect x="100" y="75" width="200" height="150" rx="15" fill="url(#cardGradient)" stroke="#e5e7eb" stroke-width="2"/>
+  
+  <!-- Computer screen -->
+  <rect x="120" y="95" width="160" height="90" rx="5" fill="#1f2937"/>
+  
+  <!-- Job search interface -->
+  <rect x="130" y="105" width="140" height="8" rx="4" fill="#3b82f6"/>
+  <rect x="130" y="120" width="100" height="6" rx="3" fill="#6b7280"/>
+  <rect x="130" y="132" width="120" height="6" rx="3" fill="#6b7280"/>
+  <rect x="130" y="144" width="80" height="6" rx="3" fill="#6b7280"/>
+  
+  <!-- User icon -->
+  <circle cx="200" cy="165" r="8" fill="#10b981"/>
+  <path d="M195 175 Q200 172 205 175" stroke="#10b981" stroke-width="2" fill="none"/>
+  
+  <!-- Floating elements representing opportunities -->
+  <circle cx="80" cy="60" r="15" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="320" cy="50" r="12" fill="#10b981" opacity="0.8"/>
+  <circle cx="350" cy="100" r="10" fill="#3b82f6" opacity="0.8"/>
+  <circle cx="50" cy="120" r="8" fill="#ef4444" opacity="0.8"/>
+  
+  <!-- Connection lines -->
+  <path d="M80 60 Q100 80 120 95" stroke="#3b82f6" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M320 50 Q280 70 260 95" stroke="#10b981" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M350 100 Q330 110 280 165" stroke="#3b82f6" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M50 120 Q80 110 120 165" stroke="#f59e0b" stroke-width="1" fill="none" opacity="0.5"/>
+</svg>
