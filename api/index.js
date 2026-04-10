@@ -1,17 +1,17 @@
 import express from "express";
-import connectDB from "../backend/database/newDbConnection.js";
-import jobRouter from "../backend/routes/jobRoutes.js";
-import userRouter from "../backend/routes/userRoutes.js";
-import applicationRouter from "../backend/routes/applicationRoutes.js";
+import connectDB from "./database/newDbConnection.js";
+import jobRouter from "./routes/jobRoutes.js";
+import userRouter from "./routes/userRoutes.js";
+import applicationRouter from "./routes/applicationRoutes.js";
 import { config } from "dotenv";
 import cors from "cors";
-import { errorMiddleware } from "../backend/middlewares/error.js";
+import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import cloudinary from "cloudinary";
 
 // Load environment variables
-config({ path: "./backend/config/newConfig.env" });
+config();
 
 const app = express();
 
@@ -52,11 +52,7 @@ app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
 
 // Connect to database
-try {
-  connectDB();
-} catch (error) {
-  console.error("Database connection error:", error.message);
-}
+connectDB();
 
 // Error handling middleware
 app.use(errorMiddleware);
