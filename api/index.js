@@ -76,5 +76,8 @@ app.get("/", (req, res) => {
   });
 });
 
-// Export for Vercel serverless
+// Export for Vercel serverless - properly wrap for handler
 export default app;
+
+// Also export as named export for better Vercel compatibility
+export const handler = app;
