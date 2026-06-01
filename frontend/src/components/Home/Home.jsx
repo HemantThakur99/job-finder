@@ -4,6 +4,7 @@ import { Context } from "../../main";
 import { Navigate } from "react-router-dom";
 import HeroSection from "./HeroSection";
 import HowItWorks from "./HowItWorks";
+import WhyChooseUs from "./WhyChooseUs";
 import PopularCategories from "./PopularCategories";
 import PopularCompanies from "./PopularCompanies";
 
@@ -17,6 +18,7 @@ const Home = () => {
       <section className="homePage page">
         <HeroSection />
         <HowItWorks />
+        <WhyChooseUs />
         <PopularCategories />
         <PopularCompanies />
       </section>

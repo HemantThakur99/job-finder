@@ -92,7 +92,7 @@ const MyApplications = () => {
   };
 
   const openModal = (imageUrl) => {
-    setResumeImageUrl(imageUrl);
+    setResumeImageUrl(imageUrl.url || imageUrl);
     setModalOpen(true);
   };
 
@@ -102,18 +102,22 @@ const MyApplications = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "Accepted": return { bg: "#10b981", text: "#059669", border: "#059669" };
+      case "Hired": return { bg: "#10b981", text: "#059669", border: "#059669" };
       case "Rejected": return { bg: "#ef4444", text: "#dc2626", border: "#dc2626" };
-      case "Pending": return { bg: "#f59e0b", text: "#d97706", border: "#d97706" };
+      case "Interview": return { bg: "#f59e0b", text: "#d97706", border: "#d97706" };
+      case "Viewed": return { bg: "#60a5fa", text: "#2563eb", border: "#2563eb" };
+      case "Applied": return { bg: "#6b7280", text: "#4b5563", border: "#4b5563" };
       default: return { bg: "#6b7280", text: "#4b5563", border: "#4b5563" };
     }
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case "Accepted": return <FaCheck />;
+      case "Hired": return <FaCheck />;
       case "Rejected": return <FaTimes />;
-      case "Pending": return <FaHourglassHalf />;
+      case "Interview": return <FaHourglassHalf />;
+      case "Viewed": return <FaSearch />;
+      case "Applied": return <FaClock />;
       default: return <FaClock />;
     }
   };
@@ -248,7 +252,7 @@ const MyApplications = () => {
                     Clear Search
                   </button>
                 )}
-                <button className="primary-btn" onClick={() => navigateTo("/job/all")}>
+                <button className="primary-btn" onClick={() => navigateTo("/job/getall")}>
                   Browse Jobs
                 </button>
               </div>
@@ -323,7 +327,7 @@ const MyApplications = () => {
         </div>
       )}
       {modalOpen && (
-        <ResumeModal imageUrl={resumeImageUrl} onClose={closeModal} />
+        <ResumeModal url={resumeImageUrl} applicationId={modalOpen && applications.find(a => a.resume && a.resume.url === resumeImageUrl)?._id} onClose={closeModal} />
       )}
     </section>
   );
@@ -482,6 +486,25 @@ const EmployerCard = ({ element, openModal, getStatusColor, getStatusIcon }) => 
   const appliedDate = new Date(element.appliedOn || Date.now()).toLocaleDateString();
   const status = element.status || "Pending";
   const statusColors = getStatusColor(status);
+  const [updating, setUpdating] = React.useState(false);
+
+  const handleStatusChange = async (e) => {
+    const newStatus = e.target.value;
+    setUpdating(true);
+    try {
+      const { data } = await axios.put(
+        `${import.meta.env.VITE_API_URL}/application/${element._id}/status`,
+        { status: newStatus },
+        { withCredentials: true }
+      );
+      // Optionally update UI by mutating element.status
+      element.status = data.application.status;
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update status');
+    } finally {
+      setUpdating(false);
+    }
+  };
   
   return (
     <div className="job_seeker_card employer-view">
@@ -576,6 +599,17 @@ const EmployerCard = ({ element, openModal, getStatusColor, getStatusIcon }) => 
             <FaEye /> View Resume
           </button>
         </div>
+      </div>
+      <div style={{ padding: '0.75rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <label style={{ fontWeight: 600, marginRight: '0.5rem' }}>Status</label>
+        <select value={status} onChange={handleStatusChange} disabled={updating}>
+          <option value="Applied">Applied</option>
+          <option value="Viewed">Viewed</option>
+          <option value="Interview">Interview</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Hired">Hired</option>
+        </select>
+        {updating && <FaSpinner className="spinner" />}
       </div>
     </div>
   );

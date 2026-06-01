@@ -28,17 +28,24 @@ const Application = () => {
       return;
     }
     
-    // Check file type
-    const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+    // Check file type (allow images, PDF and Word docs)
+    const allowedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     if (!allowedTypes.includes(file.type)) {
-      setFileError("Please select a valid image file (PNG, JPEG, or WEBP)");
+      setFileError("Please select a valid file (PNG, JPEG, WEBP, PDF, DOC, DOCX)");
       setResume(null);
       return;
     }
-    
-    // Check file size (limit to 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      setFileError("File size should be less than 2MB");
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setFileError("File size should be less than 5MB");
       setResume(null);
       return;
     }
@@ -72,7 +79,7 @@ const Application = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/v1/application/post",
+        `${import.meta.env.VITE_API_URL}/application/post`,
         formData,
         {
           withCredentials: true,
@@ -157,7 +164,7 @@ const Application = () => {
             </label>
             <input
               type="file"
-              accept=".png,.jpg,.jpeg,.webp"
+              accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx"
               onChange={handleFileChange}
               style={{ width: "100%" }}
             />

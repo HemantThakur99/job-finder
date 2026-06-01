@@ -35,6 +35,11 @@ const applicationSchema = new mongoose.Schema({
       required: true,
     },
   },
+  status: {
+    type: String,
+    enum: ["Applied", "Viewed", "Interview", "Rejected", "Hired"],
+    default: "Applied",
+  },
   applicantID: {
     user: {
       type: mongoose.Schema.Types.ObjectId,

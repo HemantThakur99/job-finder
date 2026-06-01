@@ -10,12 +10,12 @@ import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 
 const app = express();
-config({ path: "./config/newConfig.env" });
+config();
 
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL],
-    method: ["GET", "POST", "DELETE", "PUT"],
+    origin: process.env.FRONTEND_URL || "*",
+    methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
     credentials: true,
   })
 );
@@ -33,7 +33,29 @@ app.use(
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
-connectDB();
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Backend server is running",
+    env: process.env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Backend server is running",
+    api: "/api/v1",
+  });
+});
+
+connectDB();
 app.use(errorMiddleware);
-export default app;
+
+// Vercel serverless handler
+export default function handler(req, res) {
+  return app(req, res);
+}
+
+export { app };

@@ -6,15 +6,20 @@ dotenv.config();
 // New Database Connection Setup
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    if (!mongoUri) {
+      throw new Error("MongoDB connection string is not defined in environment variables.");
+    }
+
+    const conn = await mongoose.connect(mongoUri);
+
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     console.log(`Database: ${conn.connection.name}`);
-    
+
     return conn;
   } catch (error) {
-    console.error('Database Connection Error:', error.message);
-    process.exit(1);
+    console.error("Database Connection Error:", error.message);
+    return null;
   }
 };
 

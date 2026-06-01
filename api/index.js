@@ -3,34 +3,32 @@ import connectDB from "./database/newDbConnection.js";
 import jobRouter from "./routes/jobRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import applicationRouter from "./routes/applicationRoutes.js";
+import adminRouter from "./routes/adminRoutes.js";
 import { config } from "dotenv";
 import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import cloudinary from "cloudinary";
+import path from "path";
+import { fileURLToPath } from "url";
+import mongoose from "mongoose";
 
-// Load environment variables
-config();
+const root = path.dirname(fileURLToPath(import.meta.url));
+config({ path: path.join(root, ".env") });
 
 const app = express();
 
-// Cloudinary configuration with error handling
-try {
-  cloudinary.v2.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "",
-    api_key: process.env.CLOUDINARY_API_KEY || "",
-    api_secret: process.env.CLOUDINARY_API_SECRET || "",
-  });
-} catch (error) {
-  console.error("Cloudinary config error:", error.message);
-}
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "",
+  api_key: process.env.CLOUDINARY_API_KEY || "",
+  api_secret: process.env.CLOUDINARY_API_SECRET || "",
+});
 
-// CORS configuration for Vercel
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "*",
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
     credentials: true,
   })
 );
@@ -46,38 +44,47 @@ app.use(
   })
 );
 
-// API routes (already prefixed with /api/v1)
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "API is running",
+    env: process.env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "API is running",
+    db: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    env: process.env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState === 1) return next();
+  try {
+    await connectDB();
+    next();
+  } catch {
+    return res.status(503).json({
+      success: false,
+      message: "Database not connected. Set MONGO_URI in Vercel env vars.",
+    });
+  }
+});
+
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
+app.use("/api/v1/admin", adminRouter);
 
-// Connect to database
-connectDB();
-
-// Error handling middleware
 app.use(errorMiddleware);
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.status(200).json({ 
-    status: "OK", 
-    message: "Serverless function is working",
-    env: process.env.NODE_ENV,
-    timestamp: new Date().toISOString()
-  });
-});
+export { app };
 
-// Root endpoint for debugging
-app.get("/", (req, res) => {
-  res.status(200).json({ 
-    message: "Job Portal API is running",
-    version: "1.0.0",
-    endpoints: ["/api/v1/user", "/api/v1/job", "/api/v1/application", "/health"]
-  });
-});
-
-// Export for Vercel serverless - properly wrap for handler
-export default app;
-
-// Also export as named export for better Vercel compatibility
-export const handler = app;
+export default async function handler(req, res) {
+  return app(req, res);
+}

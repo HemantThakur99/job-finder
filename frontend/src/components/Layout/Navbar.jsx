@@ -33,46 +33,58 @@ const Navbar = () => {
     <nav className={isAuthorized ? "navbarShow" : "navbarHide"}>
       <div className="container">
         <div className="logo">
-          <img src="/careerconnect-white.png" alt="logo" />
+          <Link to="/" onClick={() => setShow(false)}>
+            <img src="/careerconnect-white.png" alt="CareerConnect logo" />
+          </Link>
         </div>
-        <ul className={!show ? "menu" : "show-menu menu"}>
-          <li>
-            <Link to={"/"} onClick={() => setShow(false)}>
+        <ul
+          className={!show ? "menu" : "show-menu menu"}
+          role="menu"
+          aria-hidden={!show}
+        >
+          <li role="none">
+            <Link role="menuitem" to={"/"} onClick={() => setShow(false)}>
               HOME
             </Link>
           </li>
-          <li>
-            <Link to={"/job/getall"} onClick={() => setShow(false)}>
+          <li role="none">
+            <Link role="menuitem" to={"/job/getall"} onClick={() => setShow(false)}>
               ALL JOBS
             </Link>
           </li>
-          <li>
-            <Link to={"/applications/me"} onClick={() => setShow(false)}>
-              {user && user.role === "Employer"
-                ? "APPLICANT'S APPLICATIONS"
-                : "MY APPLICATIONS"}
+          <li role="none">
+            <Link role="menuitem" to={"/applications/me"} onClick={() => setShow(false)}>
+              {user && user.role === "Employer" ? "APPLICANT'S APPLICATIONS" : "MY APPLICATIONS"}
             </Link>
           </li>
           {user && user.role === "Employer" ? (
             <>
-              <li>
-                <Link to={"/job/post"} onClick={() => setShow(false)}>
+              <li role="none">
+                <Link role="menuitem" to={"/job/post"} onClick={() => setShow(false)}>
                   POST NEW JOB
                 </Link>
               </li>
-              <li>
-                <Link to={"/job/me"} onClick={() => setShow(false)}>
+              <li role="none">
+                <Link role="menuitem" to={"/job/me"} onClick={() => setShow(false)}>
                   VIEW YOUR JOBS
                 </Link>
               </li>
             </>
           ) : null}
 
-          <button onClick={handleLogout}>LOGOUT</button>
+          <li role="none">
+            <button onClick={() => { setShow(false); handleLogout(); }} aria-label="Logout">LOGOUT</button>
+          </li>
         </ul>
-        <div className="hamburger" onClick={() => setShow(!show)}>
+
+        <button
+          className="hamburger"
+          onClick={() => setShow(!show)}
+          aria-label={show ? "Close menu" : "Open menu"}
+          aria-expanded={show}
+        >
           {show ? <AiOutlineClose /> : <GiHamburgerMenu />}
-        </div>
+        </button>
       </div>
     </nav>
   );

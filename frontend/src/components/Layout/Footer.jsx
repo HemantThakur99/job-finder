@@ -25,8 +25,8 @@ function Footer() {
           <h4>Quick Links</h4>
           <div className="quick-links">
             <Link to="/">Home</Link>
-            <Link to="/job/all">Browse Jobs</Link>
-            <Link to="/application">Applications</Link>
+            <Link to="/job/getall">Browse Jobs</Link>
+            <Link to="/applications/me">Applications</Link>
             <Link to="/register">Sign Up</Link>
           </div>
         </div>

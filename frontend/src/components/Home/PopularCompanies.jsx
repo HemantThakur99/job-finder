@@ -29,7 +29,10 @@ const PopularCompanies = () => {
   return (
     <div className="companies">
       <div className="container">
-        <h3>TOP COMPANIES</h3>
+        <div className="section-header">
+          <h2>Top Companies Hiring</h2>
+          <p>Browse leading employers with active roles for ambitious professionals.</p>
+        </div>
         <div className="banner">
           {companies.map((element) => {
             return (
@@ -37,11 +40,17 @@ const PopularCompanies = () => {
                 <div className="content">
                   <div className="icon">{element.icon}</div>
                   <div className="text">
-                    <p>{element.title}</p>
+                    <h4>{element.title}</h4>
                     <p>{element.location}</p>
                   </div>
                 </div>
-                <button>Open Positions {element.openPositions}</button>
+                <div className="stats">
+                  <div className="stat">
+                    <span className="number">{element.openPositions}</span>
+                    <span className="label">Open Roles</span>
+                  </div>
+                </div>
+                <button>View Roles</button>
               </div>
             );
           })}

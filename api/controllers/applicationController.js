@@ -4,6 +4,58 @@ import { Application } from "../models/applicationSchema.js";
 import { Job } from "../models/jobSchema.js";
 import cloudinary from "cloudinary";
 
+export const getApplicationById = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const application = await Application.findById(id).populate('applicantID.user employerID.user', 'name email');
+  if (!application) return next(new ErrorHandler('Application not found!', 404));
+  res.status(200).json({ success: true, application });
+});
+
+export const downloadResume = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const application = await Application.findById(id);
+  if (!application) return next(new ErrorHandler('Application not found!', 404));
+
+  const resumeUrl = application.resume?.url;
+  if (!resumeUrl) return next(new ErrorHandler('Resume not available', 404));
+
+  // If client prefers redirect, redirect to the cloud URL (fast)
+  if (req.query.redirect === 'true') {
+    return res.redirect(resumeUrl);
+  }
+
+  // Otherwise, send the URL in JSON so frontend can choose to download or preview
+  res.status(200).json({ success: true, url: resumeUrl });
+});
+
+export const updateApplicationStatus = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const allowed = ["Applied", "Viewed", "Interview", "Rejected", "Hired"];
+  if (!allowed.includes(status)) {
+    return next(new ErrorHandler('Invalid status value', 400));
+  }
+
+  const application = await Application.findById(id);
+  if (!application) return next(new ErrorHandler('Application not found!', 404));
+
+  // Only employer of that job (or admin) should update status
+  if (req.user.role !== 'Employer' && req.user.role !== 'Admin') {
+    return next(new ErrorHandler('Not allowed to update status', 403));
+  }
+
+  // Ensure employer owns this application
+  if (req.user.role === 'Employer' && application.employerID.user.toString() !== req.user._id.toString()) {
+    return next(new ErrorHandler('Not authorized for this application', 403));
+  }
+
+  application.status = status;
+  await application.save();
+
+  res.status(200).json({ success: true, message: 'Application status updated', application });
+});
+
 export const postApplication = catchAsyncErrors(async (req, res, next) => {
   const { role } = req.user;
   if (role === "Employer") {
@@ -17,15 +69,25 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
   }
 
   const { resume } = req.files;
-  const allowedFormats = ["image/png", "image/jpeg", "image/webp"];
+  const allowedFormats = [
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
   if (!allowedFormats.includes(resume.mimetype)) {
     return next(
-      new ErrorHandler("Invalid file type. Please upload a PNG, JPEG, or WEBP file.", 400)
+      new ErrorHandler(
+        "Invalid file type. Please upload PNG/JPEG/WEBP or PDF/DOC/DOCX file.",
+        400
+      )
     );
   }
   
   try {
-    const cloudinaryResponse = await cloudinary.uploader.upload(
+    const cloudinaryResponse = await cloudinary.v2.uploader.upload(
       resume.tempFilePath
     );
 

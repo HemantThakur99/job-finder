@@ -33,7 +33,7 @@ const PopularCategories = () => {
     {
       id: 4,
       title: "MERN STACK Development",
-      subTitle: "1000+ Open Postions",
+      subTitle: "1000+ Open Positions",
       icon: <FaReact />,
     },
     {
@@ -63,14 +63,17 @@ const PopularCategories = () => {
   ];
   return (
     <div className="categories">
-      <h3>POPULAR CATEGORIES</h3>
+      <div className="section-header">
+        <h2>Popular Categories</h2>
+        <p>Explore trending fields with top employers actively hiring right now.</p>
+      </div>
       <div className="banner">
         {categories.map((element) => {
           return (
             <div className="card" key={element.id}>
               <div className="icon">{element.icon}</div>
               <div className="text">
-                <p>{element.title}</p>
+                <h4>{element.title}</h4>
                 <p>{element.subTitle}</p>
               </div>
             </div>

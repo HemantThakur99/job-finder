@@ -1,48 +1,6 @@
-# Vercel deployment ignore file
-# This prevents unnecessary files from being deployed
-
-# Dependencies
+backend/
+scripts/
 node_modules/
-npm-debug.log
-yarn-error.log
-.pnp
-.pnp.js
-
-# Testing
-coverage/
-.nyc_output/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-
-# Environment
 .env
 .env.local
 .env.*.local
-
-# Build
-dist/
-build/
-
-# Git
-.git/
-.gitignore
-
-# Docs
-*.md
-!README.md
-
-# OS
-Thumbs.db
-
-# Backend only (if deploying API separately)
-backend/
-
-# Additional
-.prettierignore
-.eslintignore

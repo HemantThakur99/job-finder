@@ -2,6 +2,12 @@
   "name": "job-portal-api",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "dev": "node --dns-result-order=ipv4first ../scripts/dev-server.js"
+  },
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "express": "^4.18.2",
     "mongoose": "^7.5.0",
