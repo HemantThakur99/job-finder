@@ -1,4 +1,6 @@
 import express from "express";
+import os from "os";
+import path from "path";
 import connectDB from "./database/newDbConnection.js";
 import jobRouter from "./routes/jobRoutes.js";
 import userRouter from "./routes/userRoutes.js";
@@ -27,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   fileUpload({
     useTempFiles: true,
-    tempFileDir: "/tmp/",
+    tempFileDir: path.join(os.tmpdir(), "express_uploads"),
   })
 );
 app.use("/api/v1/user", userRouter);

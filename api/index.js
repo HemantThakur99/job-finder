@@ -10,6 +10,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import cloudinary from "cloudinary";
+import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
@@ -27,7 +28,7 @@ cloudinary.v2.config({
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "*",
+    origin: process.env.FRONTEND_URL || true,
     methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
     credentials: true,
   })
@@ -40,7 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   fileUpload({
     useTempFiles: true,
-    tempFileDir: "/tmp/",
+    tempFileDir: path.join(os.tmpdir(), "express_uploads"),
   })
 );
 
@@ -63,6 +64,13 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "API root. Use /api/v1/user, /api/v1/job, /api/v1/application, /api/v1/admin",
+  });
+});
+
 app.use(async (req, res, next) => {
   if (mongoose.connection.readyState === 1) return next();
   try {
@@ -80,6 +88,14 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
 app.use("/api/v1/admin", adminRouter);
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+    path: req.originalUrl,
+  });
+});
 
 app.use(errorMiddleware);
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link, Navigate } from "react-router-dom";
 import { Context } from "../../main";
@@ -8,7 +8,6 @@ import {
   FaMapMarkerAlt, 
   FaBriefcase, 
   FaDollarSign, 
-  FaClock,
   FaTimes,
   FaChevronDown,
   FaBuilding,
@@ -37,7 +36,8 @@ const Jobs = () => {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`/api/v1/job/getall`, {
+        const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+        const response = await axios.get(`${apiUrl}/job/getall`, {
           withCredentials: true,
         });
         setJobs(response.data.jobs || response.data);

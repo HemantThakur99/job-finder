@@ -1,4 +1,3 @@
-import React from "react";
 import { FaShieldAlt, FaBell, FaPaperPlane, FaChartLine } from "react-icons/fa";
 
 const WhyChooseUs = () => {

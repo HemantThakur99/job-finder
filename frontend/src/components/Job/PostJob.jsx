@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Context } from "../../main";
 
 const PostJob = () => {
@@ -125,8 +125,9 @@ const PostJob = () => {
             salaryTo,
           };
 
+      const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/job/post`,
+        `${apiUrl}/job/post`,
         jobData,
         {
           withCredentials: true,
@@ -156,7 +157,6 @@ const PostJob = () => {
     }
   };
 
-  const navigateTo = useNavigate();
   if (!isAuthorized || (user && user.role !== "Employer")) {
     return <Navigate to="/login" />;
   }

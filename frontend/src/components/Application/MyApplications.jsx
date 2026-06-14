@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../../main";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -15,7 +15,6 @@ import {
   FaCheck, 
   FaHourglassHalf,
   FaSearch,
-  FaFilter,
   FaCalendarAlt,
   FaUser,
   FaEnvelope,
@@ -23,9 +22,7 @@ import {
   FaHome,
   FaFileAlt,
   FaBuilding,
-  FaChevronRight,
-  FaSpinner,
-  FaExclamationTriangle
+  FaSpinner
 } from "react-icons/fa";
 
 const MyApplications = () => {
@@ -45,9 +42,10 @@ const MyApplications = () => {
     const fetchApplications = async () => {
       setLoading(true);
       try {
-        const endpoint = user?.role === "Employer" 
-          ? `${import.meta.env.VITE_API_URL}/application/employer/getall`
-          : `${import.meta.env.VITE_API_URL}/application/jobseeker/getall`;
+        const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+      const endpoint = user?.role === "Employer" 
+          ? `${apiUrl}/application/employer/getall`
+          : `${apiUrl}/application/jobseeker/getall`;
         
         const response = await axios.get(endpoint, {
           withCredentials: true,
@@ -74,8 +72,9 @@ const MyApplications = () => {
     if (window.confirm("Are you sure you want to withdraw this application?")) {
       setDeletingId(id);
       try {
+        const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
         const response = await axios.delete(
-          `${import.meta.env.VITE_API_URL}/application/delete/${id}`,
+          `${apiUrl}/application/delete/${id}`,
           { withCredentials: true }
         );
         
@@ -483,17 +482,18 @@ const JobSeekerCard = ({ element, deleteApplication, openModal, getStatusColor, 
 };
 
 const EmployerCard = ({ element, openModal, getStatusColor, getStatusIcon }) => {
+  const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
   const appliedDate = new Date(element.appliedOn || Date.now()).toLocaleDateString();
   const status = element.status || "Pending";
   const statusColors = getStatusColor(status);
-  const [updating, setUpdating] = React.useState(false);
+  const [updating, setUpdating] = useState(false);
 
   const handleStatusChange = async (e) => {
     const newStatus = e.target.value;
     setUpdating(true);
     try {
       const { data } = await axios.put(
-        `${import.meta.env.VITE_API_URL}/application/${element._id}/status`,
+        `${apiUrl}/application/${element._id}/status`,
         { status: newStatus },
         { withCredentials: true }
       );

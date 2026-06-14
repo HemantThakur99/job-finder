@@ -15,7 +15,7 @@ try {
   process.exit(1);
 }
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5110;
 app.listen(PORT, () => {
   console.log(`API server running on http://localhost:${PORT}`);
 });

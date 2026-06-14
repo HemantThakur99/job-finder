@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Context } from "../main";
 import { FaUser, FaEnvelope, FaPhone, FaBriefcase, FaMapMarkerAlt } from "react-icons/fa";
 

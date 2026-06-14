@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, Navigate } from "react-router-dom";
@@ -20,8 +20,9 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
       const { data } = await axios.post(
-        `/api/v1/user/login`,
+        `${apiUrl}/user/login`,
         { email, password, role },
         {
           headers: {

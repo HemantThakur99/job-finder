@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --dns-result-order=ipv4first ../scripts/dev-server.js"
+    "dev": "node --dns-result-order=ipv4first ../scripts/dev-server.js",
+    "start": "node --dns-result-order=ipv4first ../scripts/dev-server.js"
   },
   "engines": {
     "node": "20.x"

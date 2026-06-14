@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Context } from "../../main";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -11,10 +11,12 @@ const Navbar = () => {
   const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
   const navigateTo = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+
   const handleLogout = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/user/logout`,
+        `${apiUrl}/user/logout`,
         {
           withCredentials: true,
         }

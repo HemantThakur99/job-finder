@@ -1,23 +1,24 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaCheck } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../main";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const MyJobs = () => {
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
   const { isAuthorized, user } = useContext(Context);
+  const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
 
-  const navigateTo = useNavigate();
   //Fetching all jobs
   useEffect(() => {
     const fetchJobs = async () => {
       try {
+        const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/job/getmyjobs`,
+          `${apiUrl}/job/getmyjobs`,
           { withCredentials: true }
         );
         setMyJobs(data.myJobs);
@@ -47,7 +48,7 @@ const MyJobs = () => {
   const handleUpdateJob = async (jobId) => {
     const updatedJob = myJobs.find((job) => job._id === jobId);
     await axios
-      .put(`${import.meta.env.VITE_API_URL}/job/update/${jobId}`, updatedJob, {
+      .put(`${apiUrl}/job/update/${jobId}`, updatedJob, {
         withCredentials: true,
       })
       .then((res) => {
@@ -62,7 +63,7 @@ const MyJobs = () => {
   //Function For Deleting Job
   const handleDeleteJob = async (jobId) => {
     await axios
-      .delete(`${import.meta.env.VITE_API_URL}/job/delete/${jobId}`, {
+      .delete(`${apiUrl}/job/delete/${jobId}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -344,7 +345,7 @@ const MyJobs = () => {
             </>
           ) : (
             <p>
-              You've not posted any job or may be you deleted all of your jobs!
+              You&apos;ve not posted any job or may be you deleted all of your jobs!
             </p>
           )}
         </div>

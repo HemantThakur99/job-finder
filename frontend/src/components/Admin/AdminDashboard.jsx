@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaUsers, FaBriefcase, FaFileAlt } from 'react-icons/fa';
 import {
@@ -23,7 +23,8 @@ const AdminDashboard = () => {
     const fetchOverview = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/overview`, { withCredentials: true });
+        const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+        const res = await axios.get(`${apiUrl}/admin/overview`, { withCredentials: true });
         setData(res.data.data);
       } catch (err) {
         console.error(err);

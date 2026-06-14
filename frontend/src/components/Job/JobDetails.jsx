@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -11,14 +11,15 @@ const JobDetails = () => {
   const { isAuthorized, user } = useContext(Context);
 
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
     axios
-      .get(`${import.meta.env.VITE_API_URL}/job/${id}`, {
+      .get(`${apiUrl}/job/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
         setJob(res.data.job);
       })
-      .catch((error) => {
+      .catch(() => {
         navigateTo("/notfound");
       });
   }, []);

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import "./App.css";
 import { Context } from "./main";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -19,12 +19,13 @@ import MyJobs from "./components/Job/MyJobs";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 
 const App = () => {
-  const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
+  const { setIsAuthorized, setUser } = useContext(Context);
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user/getuser`,
+          `${apiUrl}/user/getuser`,
           {
             withCredentials: true,
           }

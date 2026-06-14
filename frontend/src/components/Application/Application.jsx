@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { Context } from "../../main";
@@ -78,8 +78,9 @@ const Application = () => {
     formData.append("jobId", id);
 
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/application/post`,
+        `${apiUrl}/application/post`,
         formData,
         {
           withCredentials: true,

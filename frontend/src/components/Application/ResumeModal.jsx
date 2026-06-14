@@ -1,10 +1,10 @@
-import React from "react";
 
 const ResumeModal = ({ url, applicationId, onClose }) => {
   if (!url) return null;
 
   const isPdf = url.toLowerCase().endsWith('.pdf');
-  const downloadHref = `${import.meta.env.VITE_API_URL}/application/${applicationId}/resume?redirect=true`;
+  const apiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+  const downloadHref = `${apiUrl}/application/${applicationId}/resume?redirect=true`;
 
   return (
     <div className="resume-modal" role="dialog" aria-modal="true">

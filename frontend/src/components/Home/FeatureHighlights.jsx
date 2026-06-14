@@ -1,4 +1,3 @@
-import React from "react";
 import { FaShieldAlt, FaSearch, FaRocket, FaHandshake } from "react-icons/fa";
 
 const FeatureHighlights = () => {
